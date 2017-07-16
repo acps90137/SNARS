@@ -1,5 +1,5 @@
-source("FUNCTIONTwoside.R")             #Twoside ªºfuntion
-source("FUNCTIONNode.select.R")         #Node_Select ªºfuntion
+source("FUNCTIONTwoside.R")          
+source("FUNCTIONNode.select.R")      
 source("FUNCTIONtriangle.numggplot.R")   
 source("FUNCTIONeach.datatable.R")   
 PlotlY1<-function(MATRIX,group,gname,firstdate,
@@ -68,13 +68,13 @@ server=function(input, output,session) ({
   })
   
 #-----------------------------------------    
-##¨Ï¥ÎªÌ¥i¥H¿ï¾Ü¸`ÂI²Õ§O(group)
+##ä½¿ç”¨è€…å¯ä»¥é¸æ“‡ç¯€é»çµ„åˆ¥(group)
   output$grou <- renderVisNetwork({
     i = which(as.character(Date)==as.character(input$Date) )[1];
     visGroup[[i]]
   })
 #-----------------------------------------  
-##¨Ï¥ÎªÌ¥i¥H¿ï¾Üºôµ¸¹Ï¤¤ªº¦h­Ó¸`ÂI(nodes_selection)
+##ä½¿ç”¨è€…å¯ä»¥é¸æ“‡ç¶²çµ¡åœ–ä¸­çš„å¤šå€‹ç¯€é»(nodes_selection)
   output$visNode.select <- renderVisNetwork({
     i = which(as.character(Date)==as.character(input$Date) )[1];
     visNode_selection[[i]]
@@ -86,35 +86,35 @@ server=function(input, output,session) ({
       visSelectNodes(id = nodes_selection)
   })
 #-----------------------------------------  
-##¨Ï¥ÎªÌ¥i¥H¿ï¾Üºôµ¸¹Ï¤¤ªºIN-degree
+##ä½¿ç”¨è€…å¯ä»¥é¸æ“‡ç¶²çµ¡åœ–ä¸­çš„IN-degree
   output$Net_deg <- renderVisNetwork({
     i = which(as.character(Date)==as.character(input$Date) )[1];
     
-#±Æ§Ç²Õ§O¡A±N¸ê®Æ¯x°}¨Ì·Ógroup¥h°µ±Æ§Ç
+#æ’åºçµ„åˆ¥ï¼Œå°‡è³‡æ–™çŸ©é™£ä¾ç…§groupå»åšæ’åº
     SSort=sort(paste(group),index.return=TRUE)
     RMATRIX[[i]]=MATRIX[[i]][SSort$ix,]
     CMATRIX[[i]]=RMATRIX[[i]][,SSort$ix]
-#matrixÂà¦¨igraph
+#matrixè½‰æˆigraph
     Mgfam[[i]]<- graph_from_adjacency_matrix(CMATRIX[[i]])      
     indeg[[i]] <- degree(Mgfam[[i]], mode="in")
     
     dg=input$dg;
-#¿ï¾Üindegreeªº¸`ÂI
+#é¸æ“‡indegreeçš„ç¯€é»
     select.edgein[[i]]<-which(indeg[[i]]==dg)
 
 if(dg==0){
-      id[[i]]=select.edgein[[i]]    #¤Ó¶§©M¬P¬Pid
-      sunid[[i]]=select.edgein[[i]] #¤Ó¶§id
-      starid[[i]]=id[[i]][-which(id[[i]]==select.edgein[[i]])]#¬P¬Pid
+      id[[i]]=select.edgein[[i]]    #å¤ªé™½å’Œæ˜Ÿæ˜Ÿid
+      sunid[[i]]=select.edgein[[i]] #å¤ªé™½id
+      starid[[i]]=id[[i]][-which(id[[i]]==select.edgein[[i]])]#æ˜Ÿæ˜Ÿid
       
-      #³]©w¸`ÂI¹Ï¥Ü(icon.code),¸`ÂIÃC¦â(icon.color)ªº­È
+      #è¨­å®šç¯€é»åœ–ç¤º(icon.code),ç¯€é»é¡è‰²(icon.color)çš„å€¼
       iconcode=ifelse(id[[i]]==sunid[[i]],ICON.CODE1[2],ICON.CODE1[1])
       iconcolor=ifelse(id[[i]]==sunid[[i]],ICON.COLOR1[2],ICON.COLOR1[1])
       iconsize=ifelse(id[[i]]==sunid[[i]],ICON.SIZE1[2],ICON.SIZE1[1])
-      #½Õ¾ãlegendªº¹Ï¥Ü
+      #èª¿æ•´legendçš„åœ–ç¤º
       ADDNodein <- data.frame(label =ICON.LABEL1, shape = "icon",
                               icon.code = ICON.CODE1, icon.size =rep(icon.sizeL1,length(ICON.CODE1)), icon.color =ICON.COLOR1,font.color ="midnightblue")
-      #½Õ¾ã¸`ÂI°T®§
+      #èª¿æ•´ç¯€é»è¨Šæ¯
       indeg0_node[[i]]=data.frame(id=id[[i]],
                                    label=id[[i]],
                                    group= group[id[[i]]] ,
@@ -125,9 +125,9 @@ if(dg==0){
                                    icon.size=iconsize,
                                    font.size=iconsize-5,
                                    font.color=rep("midnightblue",length(id[[i]])))
-      #½Õ¾ãÃä°T®§
+      #èª¿æ•´é‚Šè¨Šæ¯
       indeg0_edge[[i]]<- data.frame(from = id[[i]],to = id[[i]])
-      #ºôµ¸¹Ï
+      #ç¶²çµ¡åœ–
       visNetwork(indeg0_node[[i]],indeg0_edge[[i]],
                  main = list(text = paste("In-degree",dg),
                              style = "ont-family:Georgia;color:#1a2421;font-size:25px;font-weight:bold;text-align:center;"),
@@ -138,26 +138,26 @@ if(dg==0){
         addIonicons()%>%
         visOptions(highlightNearest = list(enabled = TRUE, hover = T, 
                                            hideColor = 'rgba(200,200,200,0)', degree = list(to =1)))%>%
-        visEdges( hidden=TRUE)%>%   #edge½uÁôÂÃ
+        visEdges( hidden=TRUE)%>%   #edgeç·šéš±è—
         visLegend(addNodes =ADDNodein, useGroups = FALSE)
     }else{
       indegposi[[i]]=which(get.edgelist(Mgfam[[i]])[,2] %in% select.edgein[[i]])
 
       indegedgelist[[i]]<-matrix(get.edgelist(Mgfam[[i]])[indegposi[[i]],],ncol=2)  #edgelist
       id[[i]]=unique(c(indegedgelist[[i]][,1],indegedgelist[[i]][,2]))
-      sunid[[i]]=select.edgein[[i]] #¤Ó¶§id
-      starid[[i]]=id[[i]][-which(id[[i]] %in% select.edgein[[i]])]#¬P¬Pid
+      sunid[[i]]=select.edgein[[i]] #å¤ªé™½id
+      starid[[i]]=id[[i]][-which(id[[i]] %in% select.edgein[[i]])]#æ˜Ÿæ˜Ÿid
       
-      #³]©w¸`ÂI¹Ï¥Ü(icon.code),¸`ÂIÃC¦â(icon.color)ªº­È
+      #è¨­å®šç¯€é»åœ–ç¤º(icon.code),ç¯€é»é¡è‰²(icon.color)çš„å€¼
       iconcode1=ifelse(id[[i]]%in%sunid[[i]],ICON.CODE1[2],ICON.CODE1[1])
       iconcolor1=ifelse(id[[i]]%in%sunid[[i]],ICON.COLOR1[2],ICON.COLOR1[1])
       iconsize1=ifelse(id[[i]] %in% sunid[[i]],ICON.SIZE1[2],ICON.SIZE1[1])
-      #½Õ¾ãlegendªº¹Ï¥Ü
+      #èª¿æ•´legendçš„åœ–ç¤º
       ADDNodein <- data.frame(label =ICON.LABEL1, shape = "icon",
                               icon.code = ICON.CODE1, icon.size =rep(icon.sizeL1,length(ICON.CODE1)),icon.color =ICON.COLOR1, font.color ="midnightblue")
-      #½Õ¾ãÃä°T®§
+      #èª¿æ•´é‚Šè¨Šæ¯
       indeg_edge[[i]]<- data.frame(from =indegedgelist[[i]][,1], to = indegedgelist[[i]][,2])
-      #½Õ¾ã¸`ÂI°T®§
+      #èª¿æ•´ç¯€é»è¨Šæ¯
       indeg_node[[i]]=data.frame(id=id[[i]],
                                   label=id[[i]],
                                   group=group[id[[i]]] ,
@@ -168,7 +168,7 @@ if(dg==0){
                                   icon.size=iconsize1,
                                   font.size=iconsize1-15,
                                   font.color=rep("midnightblue",length(id[[i]])))
-      #ºôµ¸¹Ï 
+      #ç¶²çµ¡åœ– 
       visNetwork(indeg_node[[i]],indeg_edge[[i]],
                  main = list(text = paste("In-degree",dg),
                              style = "ont-family:Georgia;color:#1a2421;font-size:25px;font-weight:bold;text-align:center;"),
@@ -177,7 +177,7 @@ if(dg==0){
                  width = "100%") %>%
         addFontAwesome() %>%
         addIonicons()%>%
-        visEdges(color=list(color = "white", highlight = "cyan",opacity=0.15),#hidden=TRUE,  #edge½uÁôÂÃ
+        visEdges(color=list(color = "white", highlight = "cyan",opacity=0.15),#hidden=TRUE,  #edgeç·šéš±è—
                  arrows =list(to = list(enabled = TRUE, scaleFactor = 1))
                  ,dashes = TRUE
                  ,arrowStrikethrough=FALSE) %>%
@@ -189,35 +189,35 @@ if(dg==0){
     }
   })
 #-----------------------------------------
-##¨Ï¥ÎªÌ¥i¥H¿ï¾Üºôµ¸¹Ï¤¤ªºOUT-degree
+##ä½¿ç”¨è€…å¯ä»¥é¸æ“‡ç¶²çµ¡åœ–ä¸­çš„OUT-degree
   output$Net_outdeg <- renderVisNetwork({
     i = which(as.character(Date)==as.character(input$Date) )[1];
 
-#±Æ§Ç²Õ§O¡A±N¸ê®Æ¯x°}¨Ì·Ógroup¥h°µ±Æ§Ç
+#æ’åºçµ„åˆ¥ï¼Œå°‡è³‡æ–™çŸ©é™£ä¾ç…§groupå»åšæ’åº
     SSort=sort(paste(group),index.return=TRUE) 
     RMATRIX[[i]]=MATRIX[[i]][SSort$ix,]
     CMATRIX[[i]]=RMATRIX[[i]][,SSort$ix]
-#matrixÂà¦¨igraph    
+#matrixè½‰æˆigraph    
     Mgfam[[i]]<- graph_from_adjacency_matrix(CMATRIX[[i]])      
-#­pºâoutdegree 
+#è¨ˆç®—outdegree 
     outdeg[[i]] <- degree(Mgfam[[i]],mode="out")
     
     dg=input$dgout;
-#¿ï¾ÜOUTdegreeªº¸`ÂI
+#é¸æ“‡OUTdegreeçš„ç¯€é»
     select.edgeout[[i]]<-which(outdeg[[i]]==dg)
 if(dg==0){
-      id[[i]]=select.edgeout[[i]]    #¤Ó¶§©M¬P¬Pid
-      sunid[[i]]=select.edgeout[[i]] #¤Ó¶§id
-      starid[[i]]=id[[i]][-which(id[[i]]==select.edgeout[[i]])]#¬P¬Pid
+      id[[i]]=select.edgeout[[i]]    #å¤ªé™½å’Œæ˜Ÿæ˜Ÿid
+      sunid[[i]]=select.edgeout[[i]] #å¤ªé™½id
+      starid[[i]]=id[[i]][-which(id[[i]]==select.edgeout[[i]])]#æ˜Ÿæ˜Ÿid
       
-      #³]©w¸`ÂI¹Ï¥Ü(icon.code),¸`ÂIÃC¦â(icon.color)ªº­È
+      #è¨­å®šç¯€é»åœ–ç¤º(icon.code),ç¯€é»é¡è‰²(icon.color)çš„å€¼
       iconcode=ifelse(id[[i]]==sunid[[i]],ICON.CODE1[2],ICON.CODE1[1])
       iconcolor=ifelse(id[[i]]==sunid[[i]],ICON.COLOR1[2],ICON.COLOR1[1])
       iconsize=ifelse(id[[i]]==sunid[[i]],ICON.SIZE1[2],ICON.SIZE1[1])
-      #½Õ¾ãlegendªº¹Ï¥Ü
+      #èª¿æ•´legendçš„åœ–ç¤º
       ADDNodeout <- data.frame(label =ICON.LABEL1, shape = "icon",
                                icon.code = ICON.CODE1, icon.size =rep(icon.sizeL1,length(ICON.CODE1)), icon.color =ICON.COLOR1,font.color ="midnightblue")
-      #½Õ¾ã¸`ÂI°T®§
+      #èª¿æ•´ç¯€é»è¨Šæ¯
       outdeg0_node[[i]]=data.frame(id=id[[i]],
                                     label=id[[i]],
                                     group= group[id[[i]]] ,
@@ -228,9 +228,9 @@ if(dg==0){
                                     icon.size=iconsize,
                                     font.size=iconsize-5,
                                     font.color=rep("midnightblue",length(id[[i]])))
-      #½Õ¾ãÃä°T®§
+      #èª¿æ•´é‚Šè¨Šæ¯
       outdeg0_edge[[i]]<- data.frame(from =id[[i]],to =id[[i]])
-      #ºôµ¸¹Ï 
+      #ç¶²çµ¡åœ– 
       visNetwork(outdeg0_node[[i]], outdeg0_edge[[i]],
                  main = list(text = paste("Out-degree",dg),
                              style = "ont-family:serif;color:	#1a2421;font-size:25px;font-weight:bold;text-align:center;"),
@@ -248,17 +248,17 @@ if(dg==0){
 
       outdegedgelist[[i]]<-matrix(get.edgelist(Mgfam[[i]])[outdegposi[[i]],],ncol=2)  #edgelist
       id[[i]]=unique(c(outdegedgelist[[i]][,1],outdegedgelist[[i]][,2]))
-      sunid[[i]]=select.edgeout[[i]] #¤Ó¶§id
-      starid[[i]]=id[[i]][-which(id[[i]] %in% select.edgeout[[i]])]#¬P¬Pid
+      sunid[[i]]=select.edgeout[[i]] #å¤ªé™½id
+      starid[[i]]=id[[i]][-which(id[[i]] %in% select.edgeout[[i]])]#æ˜Ÿæ˜Ÿid
       
-      #³]©w¸`ÂI¹Ï¥Ü(icon.code),¸`ÂIÃC¦â(icon.color)ªº­È
+      #è¨­å®šç¯€é»åœ–ç¤º(icon.code),ç¯€é»é¡è‰²(icon.color)çš„å€¼
       iconcode1=ifelse(id[[i]]%in%sunid[[i]],ICON.CODE1[2],ICON.CODE1[1])
       iconcolor1=ifelse(id[[i]]%in%sunid[[i]],ICON.COLOR1[2],ICON.COLOR1[1])
       iconsize1=ifelse(id[[i]] %in% sunid[[i]],ICON.SIZE1[2],ICON.SIZE1[1])
-      #½Õ¾ãlegendªº¹Ï¥Ü
+      #èª¿æ•´legendçš„åœ–ç¤º
       ADDNodeout <- data.frame(label =ICON.LABEL1, shape = "icon",
                                icon.code = ICON.CODE1, icon.size =rep(icon.sizeL1,length(ICON.CODE1)),icon.color =ICON.COLOR1, font.color ="midnightblue")
-      #½Õ¾ãÃä©M¸`ÂIªº°T®§
+      #èª¿æ•´é‚Šå’Œç¯€é»çš„è¨Šæ¯
       outdeg_edge[[i]] <- data.frame(from =outdegedgelist[[i]][,1], to = outdegedgelist[[i]][,2])
       outdeg_node[[i]] = data.frame(id=id[[i]],
                                    label=id[[i]],
@@ -271,7 +271,7 @@ if(dg==0){
                                    font.size=iconsize1-15,
                                    font.color=rep("midnightblue",length(id[[i]])))
       
-      #ºôµ¸¹Ï
+      #ç¶²çµ¡åœ–
       visNetwork(outdeg_node[[i]],outdeg_edge[[i]],
                  main = list(text = paste("Out-degree",dg),
                              style = "ont-family:serif;color:	#1a2421;font-size:25px;font-weight:bold;text-align:center;"),
@@ -280,7 +280,7 @@ if(dg==0){
                  width = "100%") %>%
         addFontAwesome() %>%
         addIonicons()%>%
-        visEdges(color=list(color = "white", highlight = "cyan",opacity=0.15),#hidden=TRUE,  #edge½uÁôÂÃ
+        visEdges(color=list(color = "white", highlight = "cyan",opacity=0.15),#hidden=TRUE,  #edgeç·šéš±è—
                  arrows =list(to = list(enabled = TRUE, scaleFactor = 1))
                  ,dashes = TRUE
                  ,arrowStrikethrough=FALSE) %>%   
@@ -292,7 +292,7 @@ if(dg==0){
     }
   })
 #-----------------------------------------
-##¸`ÂI¦bºôµ¸¤¤°Ñ»Pªº¤T¨¤§Î¼Æª½¤è¹Ï
+##ç¯€é»åœ¨ç¶²çµ¡ä¸­åƒèˆ‡çš„ä¸‰è§’å½¢æ•¸ç›´æ–¹åœ–
   output$Triangle.Number <- renderPlotly({
     i = which(as.character(Date)==as.character(input$Date) )[1];
     ptri[[i]]
